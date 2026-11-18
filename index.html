@@ -171,7 +171,7 @@
   .kg-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
   .kg-legend i.theme { background: var(--navy); box-shadow: 0 0 0 3px var(--lime); }
   .kg-theme { display: inline-block; background: var(--lime); color: var(--navy); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; box-shadow: 0 6px 14px -8px rgba(28,42,77,.5); white-space: nowrap; }
-  #kgChart { width: 100%; height: 560px; }
+  #kgChart { width: 100%; height: 640px; }
   .highcharts-tooltip-box { stroke: var(--line); }
   .kg-list { display: none; list-style: none; }
   @media (max-width: 760px) {
@@ -753,7 +753,8 @@
     const THEMES = {
       'CI/CD': ['TeamCity + Octopus', 'Pipeline health & RCA'],
       'Automation': ['Python API automation', 'LLM-as-a-Judge', 'AI Evaluation'],
-      'Quality strategy': ['Functional testing', 'Shift-left strategy']
+      'Quality strategy': ['Functional testing', 'Shift-left strategy'],
+      'AI': ['LLM-as-a-Judge', 'AI Evaluation', '93% less review']
     };
     window.KG = { C, THEMES };
     const legend = document.getElementById('kgLegend');
@@ -814,7 +815,7 @@
                     const avg = owners.reduce((a, b) => a + b, 0) / owners.length;
                     const below = owners[0] % 2 === 1;
                     const ti = Object.keys(THEMES).indexOf(n.id);
-                    n.plotX = w * (0.1 + 0.2 * avg) + (ti === 2 ? 40 : 0); n.plotY = h * (below ? 0.97 - ti * 0.04 : 0.03);
+                    n.plotX = w * (0.1 + 0.2 * avg); n.plotY = h * (below ? 0.97 : 0.03);
                   }
                 });
               }
