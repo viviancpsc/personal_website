@@ -19,7 +19,7 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { background: var(--cream); color: var(--navy); font-family: var(--sans); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+  body { font-variant-numeric: lining-nums; background: var(--cream); color: var(--navy); font-family: var(--sans); -webkit-font-smoothing: antialiased; line-height: 1.6; }
   a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
   .wrap { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
@@ -90,7 +90,7 @@
   /* EXPERIENCE */
   .exp { display: grid; grid-template-columns: 1fr 1.25fr; gap: 40px; align-items: start; }
   .jobs { display: flex; flex-direction: column; gap: 14px; }
-  .job { display: flex; align-items: center; gap: 22px; width: 100%; text-align: left; padding: 22px 28px 22px 22px; border: 1px solid var(--line); border-radius: 22px; transition: background .2s, color .2s, border-color .2s; }
+  .job { display: flex; align-items: center; gap: 22px; width: 100%; text-align: left; padding: 22px 28px; border: 1px solid var(--line); border-radius: 22px; transition: background .2s, color .2s, border-color .2s; }
   .job:hover { border-color: var(--navy); }
   .job .num { width: 54px; height: 54px; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 15px; color: var(--navy); }
   .job .meta { flex: 1; }
@@ -112,23 +112,86 @@
   .bullets { list-style: none; display: flex; flex-direction: column; gap: 26px; }
   .bullets li { position: relative; padding-left: 34px; color: var(--ink-soft); font-size: 17px; }
   .bullets li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 9px; height: 9px; border-radius: 50%; background: var(--coral); }
-  .promo { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: -24px 0 40px; }
-  .promo .tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-right: 6px; }
-  .promo .step { border-radius: 999px; padding: 8px 18px; font-weight: 600; font-size: 15px; }
-  .promo .was { border: 1px dashed #b9ae9c; color: var(--ink-soft); }
-  .promo .now { background: var(--navy); color: #fff; }
-  .promo .arrow { color: var(--coral); font-size: 20px; }
-  .job .up { color: var(--coral); font-weight: 700; }
-  .job[aria-selected="true"] .up { color: var(--lime); }
+  .promo { display: flex; align-items: center; gap: 0; margin: -20px 0 40px; max-width: 440px; }
+  .promo .lvl { display: flex; align-items: center; gap: 10px; flex: none; }
+  .promo .lvl i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .promo .lvl span { font-weight: 600; font-size: 15px; }
+  .promo .was i { border: 2px solid #b9ae9c; }
+  .promo .was span { color: var(--ink-soft); }
+  .promo .now i { background: var(--coral); box-shadow: 0 0 0 4px color-mix(in srgb, var(--coral) 22%, transparent); }
+  .promo .now span { color: var(--navy); }
+  .promo .track { flex: 1; position: relative; height: 2px; margin: 0 14px; background: linear-gradient(90deg, #d6ccbc, var(--coral)); min-width: 80px; }
+  .promo .track::after { content: ""; position: absolute; right: -1px; top: -4px; border: 5px solid transparent; border-left: 7px solid var(--coral); border-right: 0; }
+  .promo .track em { position: absolute; left: 50%; top: -24px; transform: translateX(-50%); font-style: normal; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--coral); white-space: nowrap; }
+  .job .role-r { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; margin-right: 6px; }
+  .job[aria-selected="true"] .role-r { color: #c9d0e0; }
+  .job .role-r .up { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--coral) 16%, transparent); color: var(--coral); }
+  .job .role-r .up svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .job[aria-selected="true"] .role-r .up { background: var(--lime); color: var(--navy); }
+  .job .role-m { display: none; font-size: 15px; font-weight: 500; }
+  .job .role-m .up-m { font-size: 12px; color: var(--coral); font-weight: 600; }
+  .job[aria-selected="true"] .role-m .up-m { color: var(--lime); }
+  @media (max-width: 640px) { .job .meta { flex: 1 1 0; min-width: 0; } .job .role-r { display: none; } .job .role-m { display: block; } .steps .step { grid-template-columns: 10px 1fr; row-gap: 2px; } .steps .sd { grid-column: 2; white-space: nowrap; letter-spacing: .06em; font-size: 10px; } .steps::before { top: 8px; bottom: 24px; } }
+  .job .promo-tag { display: inline-block; margin-left: 10px; padding: 2px 9px; border-radius: 999px; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; vertical-align: 2px; background: color-mix(in srgb, var(--coral) 14%, transparent); color: var(--coral); }
+  .job[aria-selected="true"] .promo-tag { background: var(--lime); color: var(--navy); }
   .detail .gap { height: 36px; }
   .detail .org.solo { font-family: var(--serif); font-weight: 500; font-size: clamp(40px, 4.4vw, 60px); letter-spacing: -0.03em; line-height: 1; color: var(--navy); margin: 18px 0 36px; }
+  .job .loc, .detail .where { display: flex; align-items: center; gap: 6px; }
+  .job .loc { margin-top: 4px; font-size: 13px; color: var(--ink-soft); }
+  .job .loc svg, .detail .where svg { width: 13px; height: 13px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+  .job[aria-selected="true"] .loc { color: #c9d0e0; }
+  .detail .where { margin-top: 8px; font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+  .detail .where svg { width: 15px; height: 15px; color: var(--coral); }
+  .steps { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; position: relative; }
+  .steps:not(.multi)::before { display: none; }
+  .steps::before { content: ""; position: absolute; left: 4px; top: 10px; bottom: 10px; width: 1.5px; background: #d6ccbc; }
+  .steps .step { display: grid; grid-template-columns: 10px auto 1fr; align-items: center; gap: 12px; position: relative; }
+  .steps .step i { width: 10px; height: 10px; border-radius: 50%; background: var(--cream); border: 1.5px solid #b9ae9c; z-index: 1; }
+  .steps .step.cur i { background: #F2B8A6; border-color: #F2B8A6; }
+  .steps .step b { font-weight: 600; font-size: 15px; min-width: 76px; }
+  .steps .step:not(.cur) b { color: var(--ink-soft); font-weight: 500; }
+  .steps .sd { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .job[aria-selected="true"] .steps::before { background: rgba(255,255,255,.25); }
+  .job[aria-selected="true"] .steps .step i { background: var(--navy); border-color: #9aa5c0; }
+  .job[aria-selected="true"] .steps .step.cur i { background: #F2B8A6; border-color: #F2B8A6; }
+  .job[aria-selected="true"] .steps .step:not(.cur) b, .job[aria-selected="true"] .steps .sd { color: #c9d0e0; }
+  .steps-d { margin: -20px 0 36px; }
+  .steps-d .steps .step b { font-size: 17px; min-width: 90px; }
+  .steps-d .steps .sd { font-size: 12px; }
   .detail.swap { animation: fade .35s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* KNOWLEDGE GRAPH */
+  .graph .head h2 em { color: var(--coral); }
+  .kg { position: relative; background: #fffaf2; border: 1px solid var(--line); border-radius: 32px; padding: 26px 24px 18px; }
+  .kg-hint { font-size: 11px; color: var(--ink-soft); padding-left: 10px; }
+  .kg-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 0 10px; }
+  .kg-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-soft); }
+  .kg-legend li { display: flex; align-items: center; gap: 7px; }
+  .kg-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .kg-legend i.theme { background: var(--navy); box-shadow: 0 0 0 3px var(--lime); }
+  .kg-theme { display: inline-block; background: var(--lime); color: var(--navy); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; box-shadow: 0 6px 14px -8px rgba(28,42,77,.5); white-space: nowrap; }
+  #kgChart { width: 100%; height: 560px; }
+  .highcharts-tooltip-box { stroke: var(--line); }
+  .kg-list { display: none; list-style: none; }
+  @media (max-width: 760px) {
+    #kgChart, .kg-top { display: none; }
+    .kg { padding: 26px 22px; }
+    .kg-list { display: block; position: relative; }
+    .kg-list::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--navy); }
+    .kg-list li { position: relative; padding-left: 32px; margin-bottom: 26px; }
+    .kg-list li:last-child { margin-bottom: 0; }
+    .kg-list li::before { content: ""; position: absolute; left: 0; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--cream); border: 2px solid var(--navy); }
+    .kg-list b { font-size: 18px; } .kg-list .m { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin: 2px 0 10px; }
+    .kg-list .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .kg-list .chips span { font-size: 13px; padding: 5px 11px; border-radius: 999px; }
+  }
 
   /* TOOLKIT */
   .toolkit { background: var(--navy); color: var(--cream); position: relative; overflow: hidden; }
   .toolkit .rings { position: absolute; top: -260px; right: -140px; width: 620px; height: 620px; border-radius: 50%; border: 1px solid rgba(255,255,255,.08); }
   .toolkit .rings::after { content: ""; position: absolute; inset: 80px; border-radius: 50%; border: 1px solid rgba(255,255,255,.08); }
+  .tk-in-exp { margin-top: 110px; margin-bottom: -110px; padding: 110px 0; position: relative; overflow: hidden; }
   .tk { display: grid; grid-template-columns: 1fr; gap: 48px; position: relative; }
   .tk-sub { display: flex; justify-content: flex-start; align-items: flex-end; gap: 32px; flex-wrap: wrap; }
   .toolkit .eyebrow { color: var(--lime); }
@@ -178,7 +241,12 @@
   .cert-grid strong { display: block; font-weight: 600; font-size: 16px; line-height: 1.3; }
   .cert-grid span { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
 
-  .lc { grid-column: 2 / span 2; display: flex; align-items: center; justify-content: space-between; gap: 32px; border-radius: 32px; padding: 32px 40px; background: #F2F5D6; border: 1px solid #E3E8B8; }
+  .lc { grid-column: 2 / span 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 32px; border-radius: 32px; padding: 32px 40px; background: #F2F5D6; border: 1px solid #E3E8B8; }
+  .lc-topics { flex-basis: 100%; border-top: 1px solid #E3E8B8; padding-top: 20px; }
+  .lc-topics .mono { font-size: 11px; color: var(--ink-soft); margin-bottom: 12px; }
+  .lc-chips { display: flex; flex-wrap: wrap; gap: 7px 6px; }
+  .lc-chips span { font-size: 12px; font-weight: 500; color: var(--navy); background: #fffaf2; border: 1px solid #E3E8B8; border-radius: 999px; padding: 4px 9px; transition: border-color .15s, transform .15s; }
+  .lc-chips span:hover { border-color: var(--navy); transform: translateY(-1px); }
   .lc-text p { color: var(--ink-soft); font-size: 15px; margin-top: 6px; white-space: nowrap; }
   .badges { display: flex; gap: 28px; }
   .badges figure { text-align: center; }
@@ -197,6 +265,7 @@
     .school, .certs { padding: 30px 24px; }
     .cert-grid { grid-template-columns: 1fr; }
     .lc { flex-direction: column; align-items: flex-start; padding: 30px 24px; }
+    .lc-topics { flex-basis: auto; width: 100%; }
     .badges { width: 100%; justify-content: space-between; gap: 10px; }
     .badges img { width: 72px; }
   }
@@ -236,6 +305,13 @@
   .runs i { width: 14px; height: 14px; flex: none; display: inline-block; }
   .runs .sq { background: #2F6FD6; border-radius: 3px; }
   .runs .dia { background: var(--navy); transform: rotate(45deg) scale(.85); border-radius: 2px; }
+  .gallery.sg .shot { height: 470px; display: flex; flex-direction: column; align-items: stretch; padding: 0; background: var(--cream); border: 1px solid var(--line); }
+  .gallery.sg .shot img { position: relative; flex: none; height: 360px; }
+  .gallery.sg .shot::after { display: none; }
+  .infocard { flex: 1; padding: 20px 28px 22px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+  .info-title { font-family: var(--serif); font-size: 21px; line-height: 1.2; color: var(--navy); }
+  .infocard .loc { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+  @media (max-width: 1080px) { .gallery.sg .shot { height: auto; } .gallery.sg .shot img { height: 260px; } }
   .place { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; }
   .place + .gallery { margin-bottom: 64px; }
   .gallery:last-of-type { margin-bottom: 0; }
@@ -247,10 +323,14 @@
   .shot.feature img { object-position: center 72%; }
   .shot.feature::after { inset: 30% 0 0 0; background: linear-gradient(transparent, rgba(28,42,77,.55)); }
   .hike { position: relative; z-index: 1; background: color-mix(in srgb, var(--cream) 94%, transparent); backdrop-filter: blur(8px); border-radius: 22px; padding: 26px 30px; max-width: 560px; }
+  .hike-title { display: flex; gap: 8px; align-items: baseline; }
+  .hike-ic { flex: none; }
+  .hike-at { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; display: block; margin: 6px 0 0 0; }
   .hike-title { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin-bottom: 20px; }
   .stats { display: flex; gap: 0; margin-bottom: 18px; }
   .stats div { padding-right: 26px; margin-right: 26px; border-right: 1px solid var(--line); }
   .stats div:last-child { border: 0; margin: 0; padding: 0; }
+  .stats div { white-space: nowrap; }
   .stats b { display: block; font-family: var(--serif); font-weight: 500; font-size: 30px; line-height: 1.1; color: var(--coral); }
   .stats span { display: block; white-space: nowrap; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
   .loc { font-size: 14px; font-weight: 500; color: var(--ink-soft); }
@@ -304,7 +384,7 @@
   .contact p { color: #3f5a86; font-size: 19px; }
   .contact .pill { padding: 22px 34px; font-size: 15px; margin-bottom: 30px; }
   footer { background: var(--navy); color: #b8c0d4; }
-  footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-top: 30px; padding-bottom: 30px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+  footer .wrap { display: flex; justify-content: flex-end; align-items: center; gap: 20px; padding-top: 30px; padding-bottom: 30px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
   footer nav { all: unset; display: flex; gap: 40px; flex-wrap: wrap; }
   footer a:hover { color: var(--lime); }
   footer .mail { position: relative; }
@@ -327,7 +407,7 @@
     .detail { display: none; }
     .job .inline { display: block; }
     .job { flex-wrap: wrap; }
-    .job .inline { flex-basis: 100%; padding: 18px 4px 6px 76px; }
+    .job .inline { flex-basis: 100%; padding: 18px 4px 6px 4px; }
     .job .inline li { color: #c9d0e0; font-size: 16px; }
     .job:not([aria-selected="true"]) .inline { display: none; }
     }
@@ -356,7 +436,7 @@
     <ul class="links">
       <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
-      <li><a href="#toolkit">Toolkit</a></li>
+      <li><a href="#graph">Knowledge Graph</a></li>
       <li><a href="#education">Education</a></li>
       <li><a href="#moments">Moments</a></li>
     </ul>
@@ -402,30 +482,49 @@
         <article class="detail" id="detail" aria-live="polite"></article>
       </div>
     </div>
-  </section>
-
   <!-- TOOLKIT -->
-  <section class="block toolkit" id="toolkit">
-    <div class="rings"></div>
-    <div class="wrap tk">
-      <div class="reveal">
-        <div class="eyebrow">02 / The Toolkit</div>
-        <h2 class="display">Curiosity <em>in practice.</em></h2>
-        <div class="tk-sub">
-          <div class="langs"><span>English</span><span>Mandarin</span></div>
+    <div class="toolkit tk-in-exp" id="toolkit">
+      <div class="rings"></div>
+      <div class="wrap tk">
+        <div class="reveal">
+          <div class="eyebrow">The Toolkit</div>
+          <h2 class="display">Curiosity <em>in practice.</em></h2>
+          <div class="tk-sub">
+            <div class="langs"><span>English</span><span>Mandarin</span></div>
+          </div>
+        </div>
+        <div class="groups reveal">
+          <div class="group"><h4><i style="background:var(--lime)"></i>Languages</h4>
+            <div class="tags"><span>Python</span><span>Java</span><span>Swift</span><span>C#</span><span>JavaScript</span><span>Bash</span></div></div>
+          <div class="group"><h4><i style="background:var(--coral-soft)"></i>Test &amp; Automation</h4>
+            <div class="tags"><span>Selenium</span><span>Robot Framework</span><span>XCUITest</span><span>ADB</span><span>JMeter</span></div></div>
+          <div class="group"><h4><i style="background:var(--sky)"></i>AI &amp; APIs</h4>
+            <div class="tags"><span>LLM-as-a-Judge</span><span>Visual validation</span><span>Prompt engineering</span><span>REST</span><span>SOAP</span><span>Postman</span><span>SoapUI</span></div></div>
+          <div class="group"><h4><i style="background:var(--pink)"></i>Delivery &amp; Infrastructure</h4>
+            <div class="tags"><span>Jenkins</span><span>TeamCity</span><span>Octopus</span><span>Docker</span><span>Linux</span><span>VMware ESXi</span></div></div>
+          <div class="group"><h4><i style="background:var(--gold)"></i>Workflow &amp; Debugging</h4>
+            <div class="tags"><span>Git</span><span>Jira</span><span>TestRail</span><span>Charles</span><span>Wireshark</span><span>VS Code</span><span>Xcode</span><span>Cursor</span></div></div>
         </div>
       </div>
-      <div class="groups reveal">
-        <div class="group"><h4><i style="background:var(--lime)"></i>Languages</h4>
-          <div class="tags"><span>Python</span><span>Java</span><span>Swift</span><span>C#</span><span>JavaScript</span><span>Bash</span></div></div>
-        <div class="group"><h4><i style="background:var(--coral-soft)"></i>Test &amp; Automation</h4>
-          <div class="tags"><span>Selenium</span><span>Robot Framework</span><span>XCUITest</span><span>ADB</span><span>JMeter</span></div></div>
-        <div class="group"><h4><i style="background:var(--sky)"></i>AI &amp; APIs</h4>
-          <div class="tags"><span>LLM-as-a-Judge</span><span>Visual validation</span><span>Prompt engineering</span><span>REST</span><span>SOAP</span><span>Postman</span><span>SoapUI</span></div></div>
-        <div class="group"><h4><i style="background:var(--pink)"></i>Delivery &amp; Infrastructure</h4>
-          <div class="tags"><span>Jenkins</span><span>TeamCity</span><span>Octopus</span><span>Docker</span><span>Linux</span><span>VMware ESXi</span></div></div>
-        <div class="group"><h4><i style="background:var(--gold)"></i>Workflow &amp; Debugging</h4>
-          <div class="tags"><span>Git</span><span>Jira</span><span>TestRail</span><span>Charles</span><span>Wireshark</span><span>VS Code</span><span>Xcode</span><span>Cursor</span></div></div>
+    </div>
+  </section>
+
+  <!-- KNOWLEDGE GRAPH -->
+  <section class="block graph" id="graph">
+    <div class="wrap">
+      <div class="head reveal">
+        <div>
+          <div class="eyebrow">02 / Knowledge Graph</div>
+          <h2 class="display">Connecting <em>the dots.</em></h2>
+        </div>
+      </div>
+      <div class="kg reveal">
+        <div class="kg-top">
+          <div class="kg-hint mono">Hover a node to trace its connections · drag to explore</div>
+          <ul class="kg-legend" id="kgLegend"></ul>
+        </div>
+        <div id="kgChart" role="img" aria-label="Career knowledge graph: companies from SAP to ByteDance, the skills built at each, and shared themes"></div>
+        <ol class="kg-list" id="kgList"></ol>
       </div>
     </div>
   </section>
@@ -451,9 +550,9 @@
             <div class="cs">Computer Science</div>
           </div>
           <div class="years">
-            <div><b>2013</b><span>Sep</span></div>
+            <div><b>2013</b></div>
             <i></i>
-            <div><b>2017</b><span>Nov</span></div>
+            <div><b>2017</b></div>
           </div>
         </article>
 
@@ -477,6 +576,10 @@
             <figure><img src="b-2025-50.png" alt="LeetCode 50 Days Badge 2025"><figcaption><b>50 Days</b><span>2025</span></figcaption></figure>
             <figure><img src="b-2024-100.png" alt="LeetCode 100 Days Badge 2024"><figcaption><b>100 Days</b><span>2024</span></figcaption></figure>
           </div>
+          <div class="lc-topics">
+            <div class="mono">Skills</div>
+            <div class="lc-chips"><span>Arrays</span><span>Strings</span><span>Hash Maps</span><span>Sorting &amp; Searching</span><span>Two Pointers</span><span>Sliding Window</span><span>Stacks &amp; Queues</span><span>Recursion</span><span>Trees &amp; Graphs</span><span>DFS / BFS</span><span>Heaps</span><span>Greedy</span><span>Dynamic Programming</span></div>
+          </div>
         </article>
       </div>
     </div>
@@ -495,13 +598,12 @@
       <div class="gallery canada reveal">
         <figure class="shot feature"><img src="m-hike.jpg" alt="Vivian looking out over Garibaldi Lake from Panorama Ridge" loading="lazy">
           <div class="hike">
-            <div class="hike-title">⛰️ One of my most challenging hiking achievements</div>
+            <div class="hike-title"><span class="hike-ic">⛰️</span><span>One of my most challenging hiking achievements<span class="hike-at">@ Panorama Ridge</span></span></div>
             <div class="stats">
               <div><b>33 km</b><span>Round-trip</span></div>
               <div><b>1,520 m</b><span>Elevation gain</span></div>
               <div><b>12 hrs</b><span>Duration</span></div>
             </div>
-            <div class="loc">📍 Panorama Ridge, British Columbia, Canada</div>
           </div>
         </figure>
         <figure class="shot snow"><img src="m-snow.jpg" alt="Vivian holding her snowboard on a mountain above Vancouver" loading="lazy"><div class="snowcard">
@@ -514,9 +616,9 @@
       </div>
 
       <div class="place reveal"><span class="pin">📍</span><h3>Singapore</h3><span class="rule"></span><span class="mono">Now</span></div>
-      <div class="gallery reveal">
-        <figure class="shot"><img src="m-badminton.jpg" alt="Badminton team at the TikTok R&amp;D Cup in Singapore" loading="lazy"><figcaption>🏸 TikTok R&amp;D Cup Badminton</figcaption></figure>
-        <figure class="shot"><img src="m-run.jpg" alt="TikTok team at the J.P. Morgan Corporate Challenge run" loading="lazy"><figcaption>🏃 J.P. Morgan Corporate Challenge</figcaption></figure>
+      <div class="gallery sg reveal">
+        <figure class="shot"><img src="m-badminton.jpg" alt="Badminton team at the TikTok R&amp;D Cup in Singapore" loading="lazy"><div class="infocard"><div class="info-title">🏸 TikTok RD Cup Badminton</div></div></figure>
+        <figure class="shot"><img src="m-run.jpg" alt="TikTok team at the J.P. Morgan Corporate Challenge run" loading="lazy"><div class="infocard"><div class="info-title">🏃 J.P. Morgan Corporate Challenge</div></div></figure>
       </div>
     </div>
   </section>
@@ -525,7 +627,6 @@
 
 <footer id="contact">
   <div class="wrap">
-    <span>Vivian Zhang</span>
     <nav>
       <a href="https://www.linkedin.com/in/vivianzhangcpsc/" target="_blank" rel="noopener" class="mail" data-email="https://www.linkedin.com/in/vivianzhangcpsc/">LinkedIn ↗</a>
       <a href="mailto:xmzxm07@gmail.com" class="mail" data-email="xmzxm07@gmail.com">Email ↗</a>
@@ -534,29 +635,35 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/highcharts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/modules/networkgraph.js"></script>
 <script>
   const jobs = [
-    { co: "ByteDance", role: "Sr. SDET", dates: "Feb 2025 — Present", color: "var(--lime)", impact: true, hideRole: true,
+    { co: "ByteDance", role: "Sr. SDET", dates: "Feb 2025 — Present", loc: "Singapore", color: "var(--lime)", impact: true, hideRole: true,
       bullets: [
         "Designed an LLM-as-a-Judge evaluation pipeline for iOS and Android UI testing, combining automated screenshots with AI-powered visual validation.",
         "Reduced manual release review from 15 hours to 1 hour per release — approximately 93% less review effort.",
         "Applied the framework to localization across 15 languages, surfacing 200+ defects including truncation, mistranslation, layout breaks, and cultural mismatches."
       ]},
-    { co: "Workday", role: "SDET III", from: "SDET II", dates: "May 2022 — Jan 2025", color: "var(--coral-soft)",
-      bullets: ["[Add 2–3 highlights from your time at Workday]"] },
-    { co: "Fortinet", role: "SDET I", dates: "Jul 2020 — May 2022", color: "var(--sky)",
-      bullets: ["[Add 2–3 highlights from your time at Fortinet]"] },
-    { co: "Trulioo", role: "SDET", dates: "Sep 2018 — Jul 2020", color: "var(--pink)",
-      bullets: ["[Add 2–3 highlights from your time at Trulioo]"] },
-    { co: "SAP", role: "Intern", dates: "Jan 2018 — Aug 2018", color: "var(--gold)",
-      bullets: ["[Add 2–3 highlights from your internship at SAP]"] }
+    { co: "Workday", role: "SDET III", dates: "May 2022 — Jan 2025", steps: [{ role: "SDET III", dates: "May 2024 — Jan 2025" }, { role: "SDET II", dates: "May 2022 — May 2024" }], loc: "Vancouver, BC, Canada", color: "var(--coral-soft)",
+      bullets: ["Developed the test strategy, including regression and automation coverage and gaps for features, and collaborated across teams to complete testing and rollout.", "Owned pipeline issues with an SLA of 2 days or less — provided on-demand support for blockers, ran root-cause analysis, improved pipeline health and resolved flakiness.", "Built a Slack notification tool that gave leadership clear visibility into pipeline status."] },
+    { co: "Fortinet", role: "SDET I", dates: "Jul 2020 — May 2022", loc: "Vancouver, BC, Canada", color: "var(--sky)",
+      bullets: ["Developed and maintained automated Python scripts for API testing, backed by solid networking knowledge (TCP/IP, NAT, firewall, routing, protocols)."] },
+    { co: "Trulioo", role: "SDET", dates: "Sep 2018 — Jul 2020", loc: "Vancouver, BC, Canada", color: "var(--pink)",
+      bullets: ["Designed and implemented unit, integration, functional, performance, stress, regression and user acceptance tests for an AWS-hosted SaaS web application.", "Researched, designed and implemented a JMeter master–slave distributed load test on AWS, integrated with TeamCity and Octopus, laying the foundation for web application profiling."] },
+    { co: "SAP", role: "Intern", dates: "Jan 2018 — Aug 2018", loc: "Vancouver, BC, Canada", color: "var(--gold)",
+      bullets: [] }
   ];
   const list = document.getElementById('jobs');
   const detail = document.getElementById('detail');
   const pad = n => String(n).padStart(2, '0');
-  const bl = b => `<ul class="bullets">${b.map(x => `<li>${x}</li>`).join('')}</ul>`;
-  const promo = j => `<div class="promo"><span class="tag">↑ Promoted</span>
-      <span class="step was">${j.from}</span><span class="arrow">→</span><span class="step now">${j.role}</span></div>`;
+  const bl = b => !b.length ? '' : `<ul class="bullets">${b.map(x => `<li>${x}</li>`).join('')}</ul>`;
+  const stepsHTML = j => `<span class="steps${j.steps.length > 1 ? ' multi' : ''}" style="--c:${j.color || 'var(--coral)'}">${j.steps.map((st, k) => `<span class="step${k === 0 ? ' cur' : ''}"><i></i><b>${st.role}</b><span class="sd">${st.dates}</span></span>`).join('')}</span>`;
+  const promo = j => `<div class="promo">
+      <div class="lvl was"><i></i><span>${j.from}</span></div>
+      <div class="track"><em>Promoted</em></div>
+      <div class="lvl now"><i></i><span>${j.role}</span></div>
+    </div>`;
   const impactCard = `<div class="impact"><div class="pct">93<sup>%</sup></div>
       <div class="lbl">less manual review effort per release</div>
       <div class="ba">15 hours <i>→</i> 1 hour</div>
@@ -565,8 +672,9 @@
   jobs.forEach((j, i) => {
     const el = document.createElement('button');
     el.className = 'job'; el.setAttribute('role', 'tab');
-    el.innerHTML = `<span class="num" style="background:${j.color}">${pad(i+1)}</span>
-      <span class="meta"><span class="co">${j.co}</span><span class="role">${j.from ? `${j.from} <span class="up">→</span> ${j.role}` : j.role}</span><span class="dates">${j.dates}</span></span>
+    const loc = `<span class="loc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>${j.loc}</span>`;
+    const js = j.steps || [{ role: j.role, dates: j.dates }];
+    el.innerHTML = `<span class="meta"><span class="co">${j.co}</span>${loc}${stepsHTML({ steps: js, color: j.color })}</span>
       <span class="ic">+</span><div class="inline">${j.impact ? impactCard : ''}${bl(j.bullets)}</div>`;
     el.addEventListener('click', () => select(i));
     list.appendChild(el);
@@ -580,8 +688,8 @@
     });
     const j = jobs[i];
     detail.classList.remove('swap'); void detail.offsetWidth; detail.classList.add('swap');
-    detail.innerHTML = `<div class="row"><div class="when">${j.dates}</div><div class="exp-tag">Experience ${pad(i+1)}</div></div>
-      ${j.hideRole ? '<div class="gap"></div>' : `<h3>${j.role}</h3><div class="org">${j.co}</div>`}${j.from ? promo(j) : ''}${j.impact ? impactCard : ''}${bl(j.bullets)}`;
+    detail.innerHTML = `<div class="row"><div><div class="when">${j.dates}</div><div class="where"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>${j.loc}</div></div><div class="exp-tag">Experience ${pad(i+1)}</div></div>
+      ${j.hideRole ? '<div class="gap"></div>' : `<h3>${j.role}</h3><div class="org">${j.co}</div>`}${j.steps ? `<div class="steps-d">${stepsHTML({ steps: j.steps, color: j.color })}</div>` : ''}${j.impact ? impactCard : ''}${bl(j.bullets)}`;
   }
   select(0);
 
@@ -591,8 +699,8 @@
 
 
   // ---- one page per section ----
-  const PAGES = ['about','experience','toolkit','education','moments'];
-  const LABEL = { about: 'About', experience: 'Experience', toolkit: 'Toolkit', education: 'Education', moments: 'Moments' };
+  const PAGES = ['about','experience','graph','education','moments'];
+  const LABEL = { about: 'About', experience: 'Experience', graph: 'Knowledge Graph', education: 'Education', moments: 'Moments' };
   const pageEl = id => id === 'about' ? document.getElementById('about').parentElement : document.getElementById(id);
   PAGES.forEach((id, i) => {
     const el = pageEl(id); el.classList.add('page'); if (id === 'about') el.classList.add('hero-page');
@@ -603,10 +711,12 @@
     document.querySelectorAll('.links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
     pageEl(id).querySelectorAll('.reveal').forEach(r => r.classList.add('in'));
     if (scroll) window.scrollTo({ top: 0, behavior: 'auto' });
+    if (id === 'graph' && window.initKG) requestAnimationFrame(() => window.initKG());
     return true;
   }
   function route() {
     const h = location.hash.slice(1);
+    if (h === 'toolkit') { show('experience', false); requestAnimationFrame(() => document.getElementById('toolkit').scrollIntoView({ behavior: 'smooth' })); return; }
     if (h === 'contact') { document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); return; }
     show(PAGES.includes(h) ? h : 'about');
   }
@@ -630,6 +740,103 @@
       a.addEventListener('mouseleave', () => clearTimeout(t));
     });
   }
+
+  // ---- Knowledge graph (Highcharts networkgraph) ----
+  (function () {
+    // Company colours: validated categorical palette (dataviz validator, light mode)
+    const C = [
+      { id: 'SAP', yr: '2018', role: 'Intern', color: '#B7861B', tint: '#F4E3B5', skills: ['First industry role', 'TDD & unit testing'] },
+      { id: 'Trulioo', yr: '2018–2020', role: 'SDET', color: '#B04F86', tint: '#F2D6E7', skills: ['TeamCity + Octopus', 'Functional testing', 'JMeter load testing', 'AWS-hosted SaaS', 'End-to-end testing', 'Regression pipelines'] },
+      { id: 'Fortinet', yr: '2020–2022', role: 'SDET I', color: '#2F74C0', tint: '#D6E6F6', skills: ['Python API automation', 'TCP/IP · NAT · Firewall', 'Routing & protocols'] },
+      { id: 'Workday', yr: '2022–2025', role: 'SDET II → III', color: '#E07A52', tint: '#F8D6CB', skills: ['Pipeline health & RCA', 'Shift-left strategy', 'Slack notification tool'] },
+      { id: 'ByteDance', yr: '2025–Now', role: 'Sr. SDET', color: '#3F7A2A', tint: '#EEF4BE', skills: ['LLM-as-a-Judge', 'AI Evaluation', 'i18n', '93% less review'] }
+    ];
+    const THEMES = {
+      'CI/CD': ['TeamCity + Octopus', 'Pipeline health & RCA'],
+      'Automation': ['Python API automation', 'LLM-as-a-Judge', 'AI Evaluation'],
+      'Quality strategy': ['Functional testing', 'Shift-left strategy']
+    };
+    window.KG = { C, THEMES };
+    const legend = document.getElementById('kgLegend');
+    if (legend) legend.innerHTML = C.map(c => `<li><i style="background:${c.color}"></i>${c.id}</li>`).join('') + '<li><i class="theme"></i>Shared theme</li>';
+    let chart = null;
+    window.initKG = function () {
+      const box = document.getElementById('kgChart');
+      if (!box || box.offsetParent === null) return;
+      if (chart) { chart.reflow(); return; }
+      if (!window.Highcharts) { setTimeout(window.initKG, 150); return; }
+      const nodes = [], links = [], owner = {};
+      C.forEach((c, i) => {
+        nodes.push({ id: c.id, color: c.color, marker: { radius: 20 }, kind: 'company', info: `${c.role} · ${c.yr}`,
+          dataLabels: { allowOverlap: true, y: -30, style: { fontSize: '15px', fontWeight: '700', color: '#1C2A4D' } } });
+        if (i) links.push({ from: C[i - 1].id, to: c.id, color: '#1C2A4D', width: 2.5 });
+        c.skills.forEach(k => {
+          owner[k] = c;
+          nodes.push({ id: k, color: c.color, marker: { radius: 7 }, kind: 'skill', info: `${c.id} · ${c.yr}` });
+          links.push({ from: c.id, to: k, color: '#d6ccbc', width: 1.5 });
+        });
+      });
+      Object.entries(THEMES).forEach(([t, ks]) => {
+        nodes.push({ id: t, color: '#1C2A4D', marker: { radius: 16, lineWidth: 5, lineColor: '#DDEB74' }, kind: 'theme',
+          info: 'Shared theme · ' + [...new Set(ks.map(k => owner[k].id))].join(', '),
+          dataLabels: { allowOverlap: true, y: (C.indexOf(owner[ks[0]]) % 2 ? 34 : -30), useHTML: true, format: '<span class="kg-theme">{point.id}</span>' } });
+        ks.forEach(k => links.push({ from: t, to: k, color: '#1C2A4D', width: 2.2, dashStyle: 'ShortDash' }));
+      });
+      chart = Highcharts.chart('kgChart', {
+        chart: { type: 'networkgraph', backgroundColor: 'transparent', spacing: [10, 10, 10, 10], style: { fontFamily: '"DM Sans", system-ui, sans-serif' } },
+        title: { text: null }, credits: { enabled: false }, exporting: { enabled: false }, legend: { enabled: false },
+        accessibility: { enabled: false },
+        tooltip: {
+          useHTML: true, backgroundColor: '#1C2A4D', borderWidth: 0, borderRadius: 12, shadow: false, padding: 10,
+          style: { color: '#FFF7EC', fontSize: '13px' },
+          formatter: function () { const p = this.point; return p.id ? `<b>${p.id}</b><br><span style="opacity:.75;font-size:12px">${p.options.info || ''}</span>` : false; }
+        },
+        plotOptions: {
+          networkgraph: {
+            keys: ['from', 'to'],
+            draggable: true,
+            layoutAlgorithm: {
+              enableSimulation: false, integration: 'verlet', linkLength: 112, maxIterations: 2000, gravitationalConstant: 0.015, friction: -0.92,
+              initialPositions: function () {
+                const w = this.chart.plotWidth, h = this.chart.plotHeight;
+                this.nodes.forEach((n, i) => {
+                  const ci = C.findIndex(c => c.id === n.id);
+                  const own = owner[n.id] ? C.indexOf(owner[n.id]) : -1;
+                  if (ci > -1) { n.plotX = w * (0.1 + 0.2 * ci); n.plotY = h * 0.5; }
+                  else if (own > -1) {
+                    const sk = owner[n.id].skills, k = sk.indexOf(n.id), m = sk.length;
+                    const below = own % 2 === 1, a0 = below ? 0.15 : 1.15, a1 = below ? 0.85 : 1.85;
+                    const ang = Math.PI * (m === 1 ? (a0 + a1) / 2 : a0 + (a1 - a0) * k / (m - 1));
+                    const r = Math.min(w, h) * (0.26 + (k % 2) * 0.08);
+                    n.plotX = w * (0.1 + 0.2 * own) + Math.cos(ang) * r * 1.1; n.plotY = h * 0.5 + Math.sin(ang) * r;
+                  }
+                  else if (THEMES[n.id]) {
+                    const owners = THEMES[n.id].map(k => C.indexOf(owner[k]));
+                    const avg = owners.reduce((a, b) => a + b, 0) / owners.length;
+                    const below = owners[0] % 2 === 1;
+                    const ti = Object.keys(THEMES).indexOf(n.id);
+                    n.plotX = w * (0.1 + 0.2 * avg) + (ti === 2 ? 40 : 0); n.plotY = h * (below ? 0.97 - ti * 0.04 : 0.03);
+                  }
+                });
+              }
+            },
+            link: { color: '#d6ccbc' },
+            marker: { lineWidth: 2, lineColor: '#FFFAF2' },
+            states: { inactive: { opacity: 0.12, linkOpacity: 0.08 }, hover: { halo: { size: 8, opacity: 0.18 } } },
+            dataLabels: {
+              enabled: true, linkFormat: '', allowOverlap: true, padding: 3, y: -14,
+              format: '{point.id}',
+              style: { fontSize: '12.5px', fontWeight: '500', color: '#55607A', textOutline: '3px #FFFAF2' }
+            }
+          }
+        },
+        series: [{ data: links, nodes }]
+      });
+    };
+    if (location.hash === '#graph') requestAnimationFrame(() => window.initKG());
+    // mobile list
+    document.getElementById('kgList').innerHTML = C.map(c => `<li><b>${c.name}</b><span class="m">${c.yr} · ${c.role}</span><span class="chips">${c.skills.map(k => `<span style="background:${c.tint}">${k}</span>`).join('')}</span></li>`).join('');
+  })();
 </script>
 </body>
 </html>
