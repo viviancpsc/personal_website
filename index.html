@@ -835,7 +835,7 @@
     };
     if (location.hash === '#graph') requestAnimationFrame(() => window.initKG());
     // mobile list
-    document.getElementById('kgList').innerHTML = C.map(c => `<li><b>${c.name}</b><span class="m">${c.yr} · ${c.role}</span><span class="chips">${c.skills.map(k => `<span style="background:${c.tint}">${k}</span>`).join('')}</span></li>`).join('');
+    document.getElementById('kgList').innerHTML = C.map(c => `<li><b>${c.id}</b><span class="m">${c.yr} · ${c.role}</span><span class="chips">${c.skills.map(k => `<span style="background:${c.tint}">${k}</span>`).join('')}</span></li>`).join('');
   })();
 </script>
 </body>
