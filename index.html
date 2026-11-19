@@ -33,7 +33,9 @@
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 82px; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 14px; }
   .mark { width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: var(--lime); display: grid; place-items: center; font-weight: 600; font-size: 15px; }
-  .brand span { font-weight: 600; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
+  .brand.active span { color: var(--coral); }
+  .brand:hover span { color: var(--coral); }
+  .brand span { transition: color .15s;  font-weight: 600; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
   .links { display: flex; align-items: center; gap: 36px; list-style: none; }
   .links a { font-size: 13px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; transition: color .15s; }
   .links a:hover { color: var(--coral); }
@@ -488,7 +490,6 @@
   <div class="wrap">
     <a href="#about" class="brand"><div class="mark">VZ</div><span>Vivian Zhang</span></a>
     <ul class="links">
-      <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#graph">Knowledge Graph</a></li>
       <li><a href="#education">Education</a></li>
@@ -782,6 +783,7 @@
     if (!PAGES.includes(id)) return false;
     PAGES.forEach(p => { pageEl(p).hidden = p !== id; });
     document.querySelectorAll('.links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    document.querySelector('.brand').classList.toggle('active', id === 'about');
     pageEl(id).querySelectorAll('.reveal').forEach(r => r.classList.add('in'));
     if (scroll) window.scrollTo({ top: 0, behavior: 'auto' });
     if (id === 'graph' && window.initKG) requestAnimationFrame(() => window.initKG());
