@@ -917,7 +917,17 @@
     const history = [];
     let busy = false;
     const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
-    const open = () => { box.hidden = false; btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); if (!body.children.length) add('bot', "Hi! I'm Vivian's portfolio assistant. Ask me about her experience, skills, certifications or how to reach her."); setTimeout(() => input.focus(), 50); };
+    // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
+    const foot = document.querySelector('footer');
+    const fit = () => {
+      if (box.hidden || !matchMedia('(min-width: 1081px)').matches) { box.style.bottom = ''; return; }
+      const overlap = innerHeight - foot.getBoundingClientRect().top;
+      box.style.bottom = Math.max(24, overlap + 20) + 'px';
+    };
+    addEventListener('scroll', fit, { passive: true });
+    addEventListener('resize', fit);
+    addEventListener('hashchange', () => requestAnimationFrame(fit));
+    const open = () => { box.hidden = false; requestAnimationFrame(fit); btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); if (!body.children.length) add('bot', "Hi! I'm Vivian's portfolio assistant. Ask me about her experience, skills, certifications or how to reach her."); setTimeout(() => input.focus(), 50); };
     const close = () => { box.hidden = true; btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); };
     btn.addEventListener('click', open);
     document.getElementById('cbClose').addEventListener('click', close);
