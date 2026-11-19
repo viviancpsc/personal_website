@@ -33,7 +33,9 @@
   nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 82px; gap: 24px; }
   .brand { display: flex; align-items: center; gap: 14px; }
   .mark { width: 42px; height: 42px; border-radius: 50%; background: var(--navy); color: var(--lime); display: grid; place-items: center; font-weight: 600; font-size: 15px; }
-  .brand span { font-weight: 600; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
+  .brand.active span { color: var(--coral); }
+  .brand:hover span { color: var(--coral); }
+  .brand span { transition: color .15s;  font-weight: 600; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; }
   .links { display: flex; align-items: center; gap: 36px; list-style: none; }
   .links a { font-size: 13px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; transition: color .15s; }
   .links a:hover { color: var(--coral); }
@@ -444,6 +446,8 @@
   .cb-msg.bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 6px; color: var(--navy); }
   .cb-msg.me { align-self: flex-end; background: var(--navy); color: #fff; border-bottom-right-radius: 6px; }
   .cb-msg.note { align-self: center; max-width: 100%; background: none; border: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); text-align: center; }
+  .cb-msg a { color: var(--coral); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; word-break: break-word; }
+  .cb-msg strong { font-weight: 700; }
   .cb-typing { display: inline-flex; gap: 4px; }
   .cb-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); animation: cbDot 1s infinite; }
   .cb-typing i:nth-child(2) { animation-delay: .15s; } .cb-typing i:nth-child(3) { animation-delay: .3s; }
@@ -451,6 +455,7 @@
   .cb-sugg { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 12px; }
   .cb-sugg button { font-size: 12.5px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--navy); }
   .cb-sugg button:hover { border-color: var(--navy); }
+  .cb-sugg.busy button { opacity: .5; pointer-events: none; }
   .cb-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #fffaf2; }
   .cb-form input { flex: 1; min-width: 0; font: inherit; font-size: 14.5px; padding: 11px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--navy); outline: none; }
   .cb-form input:focus { border-color: var(--navy); }
@@ -485,7 +490,6 @@
   <div class="wrap">
     <a href="#about" class="brand"><div class="mark">VZ</div><span>Vivian Zhang</span></a>
     <ul class="links">
-      <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#graph">Knowledge Graph</a></li>
       <li><a href="#education">Education</a></li>
@@ -779,6 +783,7 @@
     if (!PAGES.includes(id)) return false;
     PAGES.forEach(p => { pageEl(p).hidden = p !== id; });
     document.querySelectorAll('.links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    document.querySelector('.brand').classList.toggle('active', id === 'about');
     pageEl(id).querySelectorAll('.reveal').forEach(r => r.classList.add('in'));
     if (scroll) window.scrollTo({ top: 0, behavior: 'auto' });
     if (id === 'graph' && window.initKG) requestAnimationFrame(() => window.initKG());
@@ -797,7 +802,7 @@
   // switch pages on hover (desktop), with a short delay so passing over a tab doesn't trigger it
   if (matchMedia('(hover: hover)').matches) {
     let t;
-    document.querySelectorAll('.links a').forEach(a => {
+    document.querySelectorAll('.links a, a.brand').forEach(a => {
       a.addEventListener('mouseenter', () => {
         clearTimeout(t);
         t = setTimeout(() => {
@@ -917,6 +922,13 @@
     const history = [];
     let busy = false;
     const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
+    // Render a reply safely: escape HTML, then allow **bold**, clickable links and email addresses.
+    const esc = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmt = t => esc(t)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => `${p}<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a>`)
+      .replace(/(^|[\s(>])([\w.+-]+@[\w-]+\.[\w.]+[\w])/g, '$1<a href="mailto:$2">$2</a>');
     // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
     const foot = document.querySelector('footer');
     const fit = () => {
@@ -942,18 +954,18 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
     async function ask(q) {
       q = q.trim(); if (!q || busy) return;
-      busy = true; send.disabled = true; sugg.style.display = 'none';
+      busy = true; send.disabled = true; sugg.classList.add('busy');
       add('me', q); history.push({ role: 'user', content: q });
       const t = add('bot', ''); t.innerHTML = '<span class="cb-typing"><i></i><i></i><i></i></span>';
       try {
         const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-10) }) });
         let data = {}; try { data = await r.json(); } catch (e) {}
-        if (r.ok && data.reply) { t.textContent = data.reply; history.push({ role: 'assistant', content: data.reply }); }
+        if (r.ok && data.reply) { t.innerHTML = fmt(data.reply); history.push({ role: 'assistant', content: data.reply }); }
         else { t.remove(); history.pop(); add('note', data.error || 'The assistant is offline here. Please reach Vivian by email or LinkedIn.'); }
       } catch (e) {
         t.remove(); history.pop(); add('note', 'The assistant is offline here. Please reach Vivian by email or LinkedIn.');
       }
-      body.scrollTop = body.scrollHeight; busy = false; send.disabled = false; input.focus();
+      body.scrollTop = body.scrollHeight; busy = false; send.disabled = false; sugg.classList.remove('busy'); input.focus();
     }
     form.addEventListener('submit', e => { e.preventDefault(); const q = input.value; input.value = ''; ask(q); });
     sugg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
