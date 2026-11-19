@@ -451,6 +451,7 @@
   .cb-sugg { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 12px; }
   .cb-sugg button { font-size: 12.5px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--navy); }
   .cb-sugg button:hover { border-color: var(--navy); }
+  .cb-sugg.busy button { opacity: .5; pointer-events: none; }
   .cb-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #fffaf2; }
   .cb-form input { flex: 1; min-width: 0; font: inherit; font-size: 14.5px; padding: 11px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--navy); outline: none; }
   .cb-form input:focus { border-color: var(--navy); }
@@ -942,7 +943,7 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
     async function ask(q) {
       q = q.trim(); if (!q || busy) return;
-      busy = true; send.disabled = true; sugg.style.display = 'none';
+      busy = true; send.disabled = true; sugg.classList.add('busy');
       add('me', q); history.push({ role: 'user', content: q });
       const t = add('bot', ''); t.innerHTML = '<span class="cb-typing"><i></i><i></i><i></i></span>';
       try {
@@ -953,7 +954,7 @@
       } catch (e) {
         t.remove(); history.pop(); add('note', 'The assistant is offline here. Please reach Vivian by email or LinkedIn.');
       }
-      body.scrollTop = body.scrollHeight; busy = false; send.disabled = false; input.focus();
+      body.scrollTop = body.scrollHeight; busy = false; send.disabled = false; sugg.classList.remove('busy'); input.focus();
     }
     form.addEventListener('submit', e => { e.preventDefault(); const q = input.value; input.value = ''; ask(q); });
     sugg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
