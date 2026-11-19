@@ -464,12 +464,12 @@
 
   /* Larger chat on desktop: fills the left side, stays clear of the photo on the right */
   @media (min-width: 1081px) {
-    .cb { left: max(24px, calc((100vw - 1280px) / 2 + 24px)); top: 104px; bottom: 24px; height: auto; width: min(600px, calc(50vw - 72px)); border-radius: 30px; }
+    .cb { left: max(24px, calc((100vw - 1280px) / 2 + 48px)); top: 124px; bottom: 48px; height: auto; width: min(520px, calc(50vw - 110px)); border-radius: 28px; }
     .cb-head { padding: 20px 24px; gap: 14px; }
     .cb-av { width: 48px; height: 48px; }
     .cb-head b { font-size: 24px; }
     .cb-body { padding: 26px 28px; gap: 14px; }
-    .cb-msg { font-size: 16px; padding: 12px 18px; max-width: 82%; border-radius: 20px; }
+    .cb-msg { font-size: 15.5px; padding: 12px 17px; max-width: 82%; border-radius: 20px; }
     .cb-sugg { padding: 0 28px 16px; gap: 8px; }
     .cb-sugg button { font-size: 14px; padding: 8px 15px; }
     .cb-form { padding: 16px 20px; gap: 10px; }
@@ -922,7 +922,7 @@
     const fit = () => {
       if (box.hidden || !matchMedia('(min-width: 1081px)').matches) { box.style.bottom = ''; return; }
       const overlap = innerHeight - foot.getBoundingClientRect().top;
-      box.style.bottom = Math.max(24, overlap + 20) + 'px';
+      box.style.bottom = Math.max(48, overlap + 28) + 'px';
     };
     addEventListener('scroll', fit, { passive: true });
     addEventListener('resize', fit);
