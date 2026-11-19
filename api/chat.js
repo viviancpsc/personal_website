@@ -54,7 +54,7 @@ OUTSIDE WORK
 - Snowboarding: comfortable on blue runs, tackling black runs.
 - TikTok R&D Cup badminton (Singapore) and the J.P. Morgan Corporate Challenge run (Singapore).
 
-PAGES ON THIS SITE (link to the relevant one when it helps)
+PAGES ON THIS SITE (link to the relevant one when it helps; the site shows these as tabs, so refer to them as tabs, e.g. "You can also see them all under the [Education tab](https://personalwebsite-viviancpsc.vercel.app/#education).")
 - About: https://personalwebsite-viviancpsc.vercel.app/#about
 - Experience and toolkit: https://personalwebsite-viviancpsc.vercel.app/#experience
 - Knowledge graph of skills across roles: https://personalwebsite-viviancpsc.vercel.app/#graph

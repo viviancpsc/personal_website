@@ -924,15 +924,17 @@
     const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
     // Render a reply safely: escape HTML, then allow **bold**, clickable links and email addresses.
     const esc = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const SITE = 'personalwebsite-viviancpsc.vercel.app';
+    const TABS = { about: 'About page', experience: 'Experience tab', graph: 'Knowledge Graph tab', education: 'Education tab', moments: 'Moments tab' };
     const fmt = t => esc(t)
       .replace(/^[-*] /gm, '• ')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, l, u) => { try { const x = new URL(u); if (x.host === location.host || x.host === SITE) return `<a href="${x.hash || '#about'}">${l}</a>`; } catch (e) {} return `<a href="${u}" target="_blank" rel="noopener">${l}</a>`; })
       .replace(/(^|[\s(>])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => {
         let label = u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), same = false;
         try {
           const url = new URL(u);
-          if (url.host === location.host || url.host === 'personalwebsite-viviancpsc.vercel.app') { same = true; label = (url.hash.slice(1) || 'about').replace('graph', 'knowledge graph') + ' page'; }
+          if (url.host === location.host || url.host === SITE) { same = true; label = TABS[url.hash.slice(1)] || 'About page'; }
           else if (url.host.endsWith('credly.com') || url.host.endsWith('badgecert.com')) label = 'verify';
         } catch (e) {}
         return same ? `${p}<a href="${new URL(u).hash || '#about'}">${label}</a>` : `${p}<a href="${u}" target="_blank" rel="noopener">${label}</a>`;
