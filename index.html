@@ -218,11 +218,15 @@
   .school::after { content: ""; position: absolute; top: -50px; right: -50px; width: 180px; height: 180px; border-radius: 50%; border: 1px solid rgba(255,255,255,.1); }
   .school .mono { font-size: 12px; font-weight: 600; color: var(--lime); position: relative; }
   .school h3 { font-size: clamp(30px, 2.6vw, 38px); line-height: 1.08; margin-top: 18px; }
-  .ubc-photo { position: relative; flex: 1; min-height: 220px; margin: 26px 0 22px; border-radius: 18px; background: url(ubc.jpg) 30% 12% / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+  /* Campus photo as a background layer that starts below the university name */
+  .ubc-photo { position: absolute; left: 0; right: 0; bottom: 0; top: 190px; z-index: 0; background: linear-gradient(180deg, var(--navy) 0%, rgba(28,42,77,.25) 16%, rgba(28,42,77,.45) 48%, rgba(28,42,77,.95) 82%), url(ubc.jpg) 20% top / cover no-repeat; }
+  .school > :not(.ubc-photo) { position: relative; z-index: 1; }
+  .school .major, .school .years { text-shadow: 0 2px 14px rgba(28,42,77,.8); }
+  .school .ubc-spacer { flex: 1; min-height: 200px; }
   .major { position: relative; border-top: 1px solid rgba(255,255,255,.15); padding-top: 26px; }
   .major .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #9aa5c0; }
   .cs { font-family: var(--serif); font-weight: 500; font-size: clamp(30px, 2.6vw, 38px); line-height: 1.08; letter-spacing: -0.02em; color: var(--lime); margin-top: 12px; }
-  .years { margin-top: 28px; position: relative; display: flex; align-items: center; gap: 16px; }
+  .years { margin-top: 22px; position: relative; display: flex; align-items: center; gap: 16px; }
   .years div { display: flex; align-items: baseline; gap: 8px; }
   .years b { font-family: var(--serif); font-weight: 500; font-size: 28px; }
   .years span { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #9aa5c0; }
@@ -263,6 +267,7 @@
     .bento { grid-template-columns: 1fr; }
     .school, .certs, .lc { grid-column: auto; grid-row: auto; }
     .school { min-height: 0; gap: 36px; }
+    .ubc-photo { top: 160px !important; }
   }
   @media (max-width: 640px) {
     .school, .certs { padding: 30px 24px; }
@@ -601,6 +606,7 @@
             <h3>University of<br>British Columbia</h3>
           </div>
           <div class="ubc-photo" role="img" aria-label="UBC campus: clock tower and library"></div>
+          <div class="ubc-spacer"></div>
           <div class="major">
             <span class="lbl">Bachelor’s Degree · Major in</span>
             <div class="cs">Computer Science</div>
