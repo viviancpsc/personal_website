@@ -436,6 +436,7 @@
   .cb[hidden] { display: none; }
   @keyframes cbIn { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
   .cb-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; background: var(--navy); color: #fff; }
+  .cb-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px #F4C9C9; }
   .cb-head .mark { width: 36px; height: 36px; font-size: 13px; background: var(--lime); color: var(--navy); }
   .cb-head b { display: block; font-family: var(--serif); font-weight: 500; font-size: 19px; line-height: 1.1; }
   .cb-head small { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #b8c0d4; }
@@ -678,7 +679,7 @@
 </button>
 <section class="cb" id="cb" hidden role="dialog" aria-label="Chat about Vivian">
   <div class="cb-head">
-    <div class="mark">VZ</div>
+    <img class="cb-av" src="cat-avatar.jpg" alt="">
     <div><b>Ask about Vivian</b><small>AI assistant</small></div>
     <button class="cb-x" id="cbClose" aria-label="Close chat">×</button>
   </div>
