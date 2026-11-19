@@ -802,7 +802,7 @@
   // switch pages on hover (desktop), with a short delay so passing over a tab doesn't trigger it
   if (matchMedia('(hover: hover)').matches) {
     let t;
-    document.querySelectorAll('.links a').forEach(a => {
+    document.querySelectorAll('.links a, a.brand').forEach(a => {
       a.addEventListener('mouseenter', () => {
         clearTimeout(t);
         t = setTimeout(() => {
