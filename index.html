@@ -929,7 +929,7 @@
     const fmt = t => esc(t)
       .replace(/^[-*] /gm, '• ')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, l, u) => { try { const x = new URL(u); if (x.host === location.host || x.host === SITE) return `<a href="${x.hash || '#about'}">${l}</a>`; } catch (e) {} return `<a href="${u}" target="_blank" rel="noopener">${l}</a>`; })
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, l, u) => { try { const x = new URL(u); if (x.host === location.host || x.host === SITE) return `<strong>${l}</strong>`; } catch (e) {} return `<a href="${u}" target="_blank" rel="noopener">${l}</a>`; })
       .replace(/(^|[\s(>])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => {
         let label = u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), same = false;
         try {
@@ -937,7 +937,7 @@
           if (url.host === location.host || url.host === SITE) { same = true; label = TABS[url.hash.slice(1)] || 'About page'; }
           else if (url.host.endsWith('credly.com') || url.host.endsWith('badgecert.com')) label = 'verify';
         } catch (e) {}
-        return same ? `${p}<a href="${new URL(u).hash || '#about'}">${label}</a>` : `${p}<a href="${u}" target="_blank" rel="noopener">${label}</a>`;
+        return same ? `${p}<strong>${label}</strong>` : `${p}<a href="${u}" target="_blank" rel="noopener">${label}</a>`;
       })
       .replace(/(^|[\s(>])([\w.+-]+@[\w-]+\.[\w.]+[\w])/g, '$1<a href="mailto:$2">$2</a>');
     // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
