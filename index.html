@@ -426,6 +426,41 @@
     .job .inline { padding-left: 0; }
     .contact { padding: 100px 0; }
   }
+
+  /* CHAT WIDGET */
+  .cb-ic { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .cb { position: fixed; left: 24px; bottom: 24px; z-index: 51; width: 380px; height: min(580px, calc(100vh - 48px)); display: flex; flex-direction: column; background: var(--cream); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 30px 70px -24px rgba(28,42,77,.45); overflow: hidden; transform-origin: bottom left; animation: cbIn .25s ease; }
+  .cb[hidden] { display: none; }
+  @keyframes cbIn { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
+  .cb-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; background: var(--navy); color: #fff; }
+  .cb-av { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px #F4C9C9; }
+  .cb-head .mark { width: 36px; height: 36px; font-size: 13px; background: var(--lime); color: var(--navy); }
+  .cb-head b { display: block; font-family: var(--serif); font-weight: 500; font-size: 19px; line-height: 1.1; }
+  .cb-head small { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #b8c0d4; }
+  .cb-x { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 20px; line-height: 1; }
+  .cb-x:hover { background: rgba(255,255,255,.12); }
+  .cb-body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .cb-msg { max-width: 85%; padding: 10px 14px; border-radius: 18px; font-size: 14.5px; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; }
+  .cb-msg.bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 6px; color: var(--navy); }
+  .cb-msg.me { align-self: flex-end; background: var(--navy); color: #fff; border-bottom-right-radius: 6px; }
+  .cb-msg.note { align-self: center; max-width: 100%; background: none; border: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); text-align: center; }
+  .cb-typing { display: inline-flex; gap: 4px; }
+  .cb-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); animation: cbDot 1s infinite; }
+  .cb-typing i:nth-child(2) { animation-delay: .15s; } .cb-typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes cbDot { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+  .cb-sugg { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 12px; }
+  .cb-sugg button { font-size: 12.5px; padding: 6px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--navy); }
+  .cb-sugg button:hover { border-color: var(--navy); }
+  .cb-form { display: flex; gap: 8px; padding: 12px; border-top: 1px solid var(--line); background: #fffaf2; }
+  .cb-form input { flex: 1; min-width: 0; font: inherit; font-size: 14.5px; padding: 11px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--navy); outline: none; }
+  .cb-form input:focus { border-color: var(--navy); }
+  .cb-form button { width: 44px; height: 44px; flex: none; border-radius: 50%; background: var(--coral); color: #fff; display: grid; place-items: center; }
+  .cb-form button:disabled { opacity: .5; cursor: default; }
+  .cb-form button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .cb-foot { padding: 0 14px 10px; background: #fffaf2; font-size: 10.5px; color: var(--ink-soft); text-align: center; }
+  @media (max-width: 640px) {
+    .cb { left: 0; bottom: 0; width: 100%; height: 100%; border-radius: 0; border: 0; }
+      }
 </style>
 </head>
 <body>
@@ -440,7 +475,7 @@
       <li><a href="#education">Education</a></li>
       <li><a href="#moments">Moments</a></li>
     </ul>
-    <a href="#contact" class="pill coral">Get in touch <span>→</span></a>
+    <button class="pill coral" id="cbBtn" aria-label="Ask about Vivian" aria-expanded="false"><svg class="cb-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>Ask about me</button>
   </div>
 </nav>
 
@@ -633,6 +668,26 @@
     </nav>
   </div>
 </footer>
+
+<section class="cb" id="cb" hidden role="dialog" aria-label="Chat about Vivian">
+  <div class="cb-head">
+    <img class="cb-av" src="cat-avatar.jpg" alt="">
+    <div><b>Ask about Vivian</b><small>AI assistant</small></div>
+    <button class="cb-x" id="cbClose" aria-label="Close chat">×</button>
+  </div>
+  <div class="cb-body" id="cbBody" aria-live="polite"></div>
+  <div class="cb-sugg" id="cbSugg">
+    <button>What does Vivian do at ByteDance?</button>
+    <button>What's her testing toolkit?</button>
+    <button>Which certifications does she have?</button>
+    <button>How can I contact her?</button>
+  </div>
+  <form class="cb-form" id="cbForm">
+    <input id="cbInput" maxlength="500" autocomplete="off" placeholder="Ask a question…" aria-label="Your question">
+    <button id="cbSend" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+  </form>
+  <div class="cb-foot">AI answers are based on Vivian's portfolio and may be imperfect.</div>
+</section>
 
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/highcharts.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/highcharts@11.4.8/modules/networkgraph.js"></script>
@@ -836,6 +891,38 @@
     if (location.hash === '#graph') requestAnimationFrame(() => window.initKG());
     // mobile list
     document.getElementById('kgList').innerHTML = C.map(c => `<li><b>${c.id}</b><span class="m">${c.yr} · ${c.role}</span><span class="chips">${c.skills.map(k => `<span style="background:${c.tint}">${k}</span>`).join('')}</span></li>`).join('');
+  })();
+
+  // ---- Chat widget ----
+  (function () {
+    const btn = document.getElementById('cbBtn'), box = document.getElementById('cb'), body = document.getElementById('cbBody');
+    const form = document.getElementById('cbForm'), input = document.getElementById('cbInput'), send = document.getElementById('cbSend');
+    const sugg = document.getElementById('cbSugg');
+    const history = [];
+    let busy = false;
+    const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
+    const open = () => { box.hidden = false; btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); if (!body.children.length) add('bot', "Hi! I'm Vivian's portfolio assistant. Ask me about her experience, skills, certifications or how to reach her."); setTimeout(() => input.focus(), 50); };
+    const close = () => { box.hidden = true; btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); };
+    btn.addEventListener('click', open);
+    document.getElementById('cbClose').addEventListener('click', close);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+    async function ask(q) {
+      q = q.trim(); if (!q || busy) return;
+      busy = true; send.disabled = true; sugg.style.display = 'none';
+      add('me', q); history.push({ role: 'user', content: q });
+      const t = add('bot', ''); t.innerHTML = '<span class="cb-typing"><i></i><i></i><i></i></span>';
+      try {
+        const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-10) }) });
+        let data = {}; try { data = await r.json(); } catch (e) {}
+        if (r.ok && data.reply) { t.textContent = data.reply; history.push({ role: 'assistant', content: data.reply }); }
+        else { t.remove(); history.pop(); add('note', data.error || 'The assistant is offline here. Please reach Vivian by email or LinkedIn.'); }
+      } catch (e) {
+        t.remove(); history.pop(); add('note', 'The assistant is offline here. Please reach Vivian by email or LinkedIn.');
+      }
+      body.scrollTop = body.scrollHeight; busy = false; send.disabled = false; input.focus();
+    }
+    form.addEventListener('submit', e => { e.preventDefault(); const q = input.value; input.value = ''; ask(q); });
+    sugg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => ask(b.textContent)));
   })();
 </script>
 </body>
