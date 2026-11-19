@@ -920,9 +920,17 @@
     // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
     const foot = document.querySelector('footer');
     const fit = () => {
-      if (box.hidden || !matchMedia('(min-width: 1081px)').matches) { box.style.bottom = ''; return; }
+      if (box.hidden || !matchMedia('(min-width: 1081px)').matches) { box.style.bottom = ''; box.style.width = ''; return; }
       const overlap = innerHeight - foot.getBoundingClientRect().top;
       box.style.bottom = Math.max(48, overlap + 28) + 'px';
+      // Widen to cover the intro text on the left, but always stop well short of the photo.
+      const heroEl = document.querySelector('.hero');
+      if (!heroEl || heroEl.offsetParent === null) { box.style.width = ''; return; }
+      const left = box.getBoundingClientRect().left;
+      const textEnd = Math.max(...[...document.querySelectorAll('.hero > div:first-child > *')].map(el => el.getBoundingClientRect().right));
+      const photo = document.querySelector('.portrait').getBoundingClientRect().left;
+      const want = Math.max(520, textEnd - left + 28), limit = photo - left - 48;
+      box.style.width = Math.round(Math.min(want, limit, 680)) + 'px';
     };
     addEventListener('scroll', fit, { passive: true });
     addEventListener('resize', fit);
