@@ -444,6 +444,8 @@
   .cb-msg.bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 6px; color: var(--navy); }
   .cb-msg.me { align-self: flex-end; background: var(--navy); color: #fff; border-bottom-right-radius: 6px; }
   .cb-msg.note { align-self: center; max-width: 100%; background: none; border: 0; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); text-align: center; }
+  .cb-msg a { color: var(--coral); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; word-break: break-word; }
+  .cb-msg strong { font-weight: 700; }
   .cb-typing { display: inline-flex; gap: 4px; }
   .cb-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-soft); animation: cbDot 1s infinite; }
   .cb-typing i:nth-child(2) { animation-delay: .15s; } .cb-typing i:nth-child(3) { animation-delay: .3s; }
@@ -918,6 +920,13 @@
     const history = [];
     let busy = false;
     const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
+    // Render a reply safely: escape HTML, then allow **bold**, clickable links and email addresses.
+    const esc = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmt = t => esc(t)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => `${p}<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a>`)
+      .replace(/(^|[\s(>])([\w.+-]+@[\w-]+\.[\w.]+[\w])/g, '$1<a href="mailto:$2">$2</a>');
     // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
     const foot = document.querySelector('footer');
     const fit = () => {
@@ -949,7 +958,7 @@
       try {
         const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.slice(-10) }) });
         let data = {}; try { data = await r.json(); } catch (e) {}
-        if (r.ok && data.reply) { t.textContent = data.reply; history.push({ role: 'assistant', content: data.reply }); }
+        if (r.ok && data.reply) { t.innerHTML = fmt(data.reply); history.push({ role: 'assistant', content: data.reply }); }
         else { t.remove(); history.pop(); add('note', data.error || 'The assistant is offline here. Please reach Vivian by email or LinkedIn.'); }
       } catch (e) {
         t.remove(); history.pop(); add('note', 'The assistant is offline here. Please reach Vivian by email or LinkedIn.');
