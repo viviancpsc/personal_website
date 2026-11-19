@@ -925,9 +925,18 @@
     // Render a reply safely: escape HTML, then allow **bold**, clickable links and email addresses.
     const esc = t => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const fmt = t => esc(t)
+      .replace(/^[-*] /gm, '• ')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-      .replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => `${p}<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a>`)
+      .replace(/(^|[\s(>])(https?:\/\/[^\s<)]+[^\s<).,!?;:])/g, (m, p, u) => {
+        let label = u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''), same = false;
+        try {
+          const url = new URL(u);
+          if (url.host === location.host || url.host === 'personalwebsite-viviancpsc.vercel.app') { same = true; label = (url.hash.slice(1) || 'about').replace('graph', 'knowledge graph') + ' page'; }
+          else if (url.host.endsWith('credly.com') || url.host.endsWith('badgecert.com')) label = 'verify';
+        } catch (e) {}
+        return same ? `${p}<a href="${new URL(u).hash || '#about'}">${label}</a>` : `${p}<a href="${u}" target="_blank" rel="noopener">${label}</a>`;
+      })
       .replace(/(^|[\s(>])([\w.+-]+@[\w-]+\.[\w.]+[\w])/g, '$1<a href="mailto:$2">$2</a>');
     // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
     const foot = document.querySelector('footer');
