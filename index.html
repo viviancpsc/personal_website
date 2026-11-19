@@ -429,7 +429,7 @@
 
   /* CHAT WIDGET */
   .cb-ic { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-  .cb { position: fixed; left: 24px; bottom: 24px; z-index: 51; width: 380px; height: min(580px, calc(100vh - 48px)); display: flex; flex-direction: column; background: var(--cream); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 30px 70px -24px rgba(28,42,77,.45); overflow: hidden; transform-origin: bottom left; animation: cbIn .25s ease; }
+  .cb { position: fixed; left: 24px; bottom: 24px; z-index: 51; width: 400px; height: min(600px, calc(100vh - 48px)); display: flex; flex-direction: column; background: var(--cream); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 30px 70px -24px rgba(28,42,77,.45); overflow: hidden; transform-origin: bottom left; animation: cbIn .25s ease; }
   .cb[hidden] { display: none; }
   @keyframes cbIn { from { opacity: 0; transform: scale(.94) translateY(8px); } to { opacity: 1; transform: none; } }
   .cb-head { display: flex; align-items: center; gap: 12px; padding: 16px 18px; background: var(--navy); color: #fff; }
@@ -461,6 +461,22 @@
   @media (max-width: 640px) {
     .cb { left: 0; bottom: 0; width: 100%; height: 100%; border-radius: 0; border: 0; }
       }
+
+  /* Larger chat on desktop: fills the left side, stays clear of the photo on the right */
+  @media (min-width: 1081px) {
+    .cb { left: max(24px, calc((100vw - 1280px) / 2 + 48px)); top: 124px; bottom: 48px; height: auto; width: min(520px, calc(50vw - 110px)); border-radius: 28px; }
+    .cb-head { padding: 20px 24px; gap: 14px; }
+    .cb-av { width: 48px; height: 48px; }
+    .cb-head b { font-size: 24px; }
+    .cb-body { padding: 26px 28px; gap: 14px; }
+    .cb-msg { font-size: 15.5px; padding: 12px 17px; max-width: 82%; border-radius: 20px; }
+    .cb-sugg { padding: 0 28px 16px; gap: 8px; }
+    .cb-sugg button { font-size: 14px; padding: 8px 15px; }
+    .cb-form { padding: 16px 20px; gap: 10px; }
+    .cb-form input { font-size: 16px; padding: 14px 18px; }
+    .cb-form button { width: 50px; height: 50px; }
+    .cb-foot { padding: 0 20px 14px; font-size: 11.5px; }
+  }
 </style>
 </head>
 <body>
@@ -901,7 +917,25 @@
     const history = [];
     let busy = false;
     const add = (cls, text) => { const d = document.createElement('div'); d.className = 'cb-msg ' + cls; d.textContent = text; body.appendChild(d); body.scrollTop = body.scrollHeight; return d; };
-    const open = () => { box.hidden = false; btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); if (!body.children.length) add('bot', "Hi! I'm Vivian's portfolio assistant. Ask me about her experience, skills, certifications or how to reach her."); setTimeout(() => input.focus(), 50); };
+    // Keep the panel's bottom edge above the navy footer whenever the footer is on screen.
+    const foot = document.querySelector('footer');
+    const fit = () => {
+      if (box.hidden || !matchMedia('(min-width: 1081px)').matches) { box.style.bottom = ''; box.style.width = ''; return; }
+      const overlap = innerHeight - foot.getBoundingClientRect().top;
+      box.style.bottom = Math.max(48, overlap + 28) + 'px';
+      // Widen to cover the intro text on the left, but always stop well short of the photo.
+      const heroEl = document.querySelector('.hero');
+      if (!heroEl || heroEl.offsetParent === null) { box.style.width = ''; return; }
+      const left = box.getBoundingClientRect().left;
+      const textEnd = Math.max(...[...document.querySelectorAll('.hero > div:first-child > *')].map(el => el.getBoundingClientRect().right));
+      const photo = document.querySelector('.portrait').getBoundingClientRect().left;
+      const want = Math.max(520, textEnd - left + 28), limit = photo - left - 48;
+      box.style.width = Math.round(Math.min(want, limit, 680)) + 'px';
+    };
+    addEventListener('scroll', fit, { passive: true });
+    addEventListener('resize', fit);
+    addEventListener('hashchange', () => requestAnimationFrame(fit));
+    const open = () => { box.hidden = false; requestAnimationFrame(fit); btn.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); if (!body.children.length) add('bot', "Hi! I'm Vivian's portfolio assistant. Ask me about her experience, skills, certifications or how to reach her."); setTimeout(() => input.focus(), 50); };
     const close = () => { box.hidden = true; btn.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.focus(); };
     btn.addEventListener('click', open);
     document.getElementById('cbClose').addEventListener('click', close);

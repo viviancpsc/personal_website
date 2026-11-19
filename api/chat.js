@@ -3,7 +3,8 @@
 // Needs the GROQ_API_KEY environment variable (set it in Vercel → Settings → Environment Variables).
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+// llama-3.3-70b-versatile was shut down on Groq's free tier (Aug 2026); gpt-oss-120b is Groq's recommended replacement.
+const MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
 
 const PROFILE = `
 Name: Vivian Zhang
@@ -113,7 +114,9 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: MODEL,
         temperature: 0.3,
-        max_tokens: 450,
+        // gpt-oss is a reasoning model: keep its thinking short and leave room for the answer.
+        reasoning_effort: 'low',
+        max_tokens: 1200,
         messages: [{ role: 'system', content: SYSTEM }, ...messages]
       })
     });
@@ -121,7 +124,8 @@ module.exports = async function handler(req, res) {
       return res.status(429).json({ error: 'The assistant is busy right now — please try again in a minute.' });
     }
     if (!r.ok) {
-      console.error('Groq error', r.status, await r.text().catch(() => ''));
+      // Shows in Vercel → project → Logs, to make problems like a retired model easy to spot.
+      console.error('Groq error', r.status, MODEL, await r.text().catch(() => ''));
       return res.status(502).json({ error: 'The assistant is unavailable right now.' });
     }
     const data = await r.json();
